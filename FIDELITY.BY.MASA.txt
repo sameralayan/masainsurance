@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIDELITY by MASA Insurance</title>
+    <style>
+        /* Your existing styles here */
+    </style>
+    <script>
+        // Function to prompt for password
+        function promptForPassword() {
+            var password = prompt("Enter the password:");
+            // Replace 'your_password' with the actual password
+            if (password !== null && password === 'your_password') {
+                // Password is correct, continue loading the page
+                return true;
+            } else {
+                // Incorrect password, prevent loading the page
+                alert("Incorrect password. Access denied.");
+                return false;
+            }
+        }
+
+        // Call the promptForPassword function when the page loads
+        window.onload = function () {
+            if (!promptForPassword()) {
+                // If password is incorrect, redirect to a different page or display an error message
+                window.location.href = "password-error.html";
+            }
+        };
+    </script>
+</head>
+<body>
+    <!-- Your existing body content here -->
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIDELITY by MASA Insurance</title>
+    <style>
+        body {
+            background-color: #3498db;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #2980b9;
+        }
+
+        .plan-container {
+            background-color: #2980b9;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            width: 70%;
+            max-width: 400px; /* Adjusted max-width */
+            margin: auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: calc(100% - 16px); /* Adjusted width */
+            padding: 8px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #34495e;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%; /* Adjusted width */
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        function calculatePlatinum() {
+            const carValue = parseFloat(document.getElementById('platinumCarValue').value);
+            const manufacturingYear = parseInt(document.getElementById('platinumManufacturingYear').value);
+
+            if (manufacturingYear < 2010 || manufacturingYear > 2023 || carValue < 50001 || carValue > 300000) {
+                alert("This car is not eligible for the Platinum plan.");
+                return;
+            }
+
+            let rate;
+            if (manufacturingYear >= 2010 && manufacturingYear <= 2015) {
+                rate = 0.028;
+            } else if (manufacturingYear >= 2016 && manufacturingYear <= 2019) {
+                rate = 0.026;
+            } else if (manufacturingYear >= 2020 && manufacturingYear <= 2023) {
+                rate = 0.024;
+            }
+
+            const result = carValue * rate;
+            document.getElementById('platinumResult').innerText = `Policy Price: $${result.toFixed(2)}`;
+        }
+
+        function calculateSilver() {
+            const carValue = parseFloat(document.getElementById('silverCarValue').value);
+            const manufacturingYear = parseInt(document.getElementById('silverManufacturingYear').value);
+            const withAgencyRepair = document.getElementById('silverAgencyRepair').checked;
+
+            if (
+                (manufacturingYear >= 2007 && manufacturingYear <= 2017 && withAgencyRepair) ||
+                (manufacturingYear < 2007 || manufacturingYear > 2023) ||
+                (manufacturingYear >= 2018 && manufacturingYear <= 2023 && carValue > 50000)
+            ) {
+                alert("This car is not eligible for the Silver plan with the selected options.");
+                return;
+            }
+
+            // Check if car value is above $50,000
+            if (carValue > 50000) {
+                alert("Car value above $50,000 is not eligible for Silver plan calculation.");
+                return;
+            }
+
+            let rate;
+            if (manufacturingYear >= 2007 && manufacturingYear <= 2011) {
+                rate = withAgencyRepair ? 0 : 0.0325; // 3.25% without agency repair
+            } else if (manufacturingYear >= 2012 && manufacturingYear <= 2017) {
+                rate = withAgencyRepair ? 0 : 0.03; // 3% without agency repair
+            } else if (manufacturingYear >= 2018 && manufacturingYear <= 2019) {
+                rate = withAgencyRepair ? 0.0325 : 0.029; // 3.25% with agency repair, 2.9% without agency repair
+            } else if (manufacturingYear >= 2020 && manufacturingYear <= 2023) {
+                rate = withAgencyRepair ? 0.0275 : 0.027; // 2.75%  with agency repair, 2.70% without agency repair
+            }
+
+            let result = carValue * rate;
+
+            // Check if the result is less than $600 with agency repair and adjust it to the minimum premium
+            if (withAgencyRepair && result < 600) {
+                result = 600;
+            }
+
+            // Check if the result is less than $550 without agency repair and adjust it to the minimum premium
+            if (!withAgencyRepair && result < 550) {
+                result = 550;
+            }
+
+            document.getElementById('silverResult').innerText = `Policy Price: $${result.toFixed(2)}`;
+        }
+
+        function calculateBronze() {
+            const carValue = parseFloat(document.getElementById('bronzeCarValue').value);
+            const manufacturingYear = parseInt(document.getElementById('bronzeManufacturingYear').value);
+
+            if (
+                (manufacturingYear < 2007 || manufacturingYear > 2023) ||
+                (manufacturingYear >= 2012 && manufacturingYear <= 2017 && carValue > 25000) ||
+                (manufacturingYear >= 2018 && manufacturingYear <= 2023 && carValue <= 0) ||
+                (manufacturingYear >= 2018 && manufacturingYear <= 2023 && carValue > 25000)
+            ) {
+                alert("This car is not eligible for the Bronze plan.");
+                return;
+            }
+
+            let rate;
+            if (manufacturingYear >= 2007 && manufacturingYear <= 2011) {
+                rate = 0.03;
+            } else if (manufacturingYear >= 2012 && manufacturingYear <= 2017) {
+                rate = 0.028; // Fixed rate of 2.8%
+            } else if (manufacturingYear >= 2018 && manufacturingYear <= 2023) {
+                rate = 0.026;
+            }
+
+            // Check if the car value is less than or equal to $25000 before making the calculation
+            if (carValue <= 25000) {
+                let result = carValue * rate;
+
+                // Ensure the minimum premium is $465
+                result = Math.max(result, 465);
+
+                document.getElementById('bronzeResult').innerText = `Policy Price: $${result.toFixed(2)}`;
+            } else {
+                alert("Car value must be less than or equal to $25000 for the Bronze plan calculation.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>FIDELITY by MASA Insurance</h1>
+
+    <!-- Platinum Plan -->
+    <div class="plan-container">
+        <h2>Platinum Plan</h2>
+        <label for="platinumCarValue">Enter Car Value (in dollars):</label>
+        <input type="number" id="platinumCarValue" placeholder="Enter car value">
+        <label for="platinumManufacturingYear">Enter Manufacturing Year:</label>
+        <input type="number" id="platinumManufacturingYear" placeholder="Enter manufacturing year">
+        <br><br>
+        <button onclick="calculatePlatinum()">Calculate Policy</button>
+        <div id="platinumResult"></div>
+    </div>
+
+    <!-- Silver Plan -->
+    <div class="plan-container">
+        <h2>Silver Plan</h2>
+        <label for="silverCarValue">Enter Car Value (in dollars):</label>
+        <input type="number" id="silverCarValue" placeholder="Enter car value">
+        <label for="silverManufacturingYear">Enter Manufacturing Year:</label>
+        <input type="number" id="silverManufacturingYear" placeholder="Enter manufacturing year">
+        <label for="silverAgencyRepair">Include Agency Repair:</label>
+        <input type="checkbox" id="silverAgencyRepair">
+        <br><br>
+        <button onclick="calculateSilver()">Calculate Policy</button>
+        <div id="silverResult"></div>
+    </div>
+
+    <!-- Bronze Plan -->
+    <div class="plan-container">
+        <h2>Bronze Plan</h2>
+        <label for="bronzeCarValue">Enter Car Value (in dollars):</label>
+        <input type="number" id="bronzeCarValue" placeholder="Enter car value">
+        <label for="bronzeManufacturingYear">Enter Manufacturing Year:</label>
+        <input type="number" id="bronzeManufacturingYear" placeholder="Enter manufacturing year">
+        <br><br>
+        <button onclick="calculateBronze()">Calculate Policy</button>
+        <div id="bronzeResult"></div>
+    </div>
+</body>
+</html>
